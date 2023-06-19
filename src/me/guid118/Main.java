@@ -10,12 +10,32 @@ public class Main {
     static double totalpoints;
     static double nterm;
     static Scanner scanner = new Scanner(System.in);
+    private static boolean useConfig;
+
     public static void main(String[] args) {
+        start();
+        do {
+            useConfig = false;
+            configquestion();
+            calculate();
+            System.out.println("do you want to calculate another note? [y/n]");
+            if (!useConfig) scanner.nextLine();
+        } while (scanner.nextLine().equalsIgnoreCase("y"));
+        end();
+    }
+
+
+
+    private static void start() {
         Config.CreateFile();
         System.out.println("this is a grade calculator, used to calculate your grade given the right inputs. \nIt can either use the config.json or the command line.");
+    }
+
+    private static void configquestion(){
         System.out.println("do you want to use the config.json? [y/n]");
         System.out.println("please note that the config.json must contain the appropriate values before confirming here.");
         if (scanner.nextLine().equalsIgnoreCase("y")) {
+            useConfig = true;
             useconfig();
         } else {
             console();
@@ -28,7 +48,6 @@ public class Main {
             points = Config.getvalue("points");
             totalpoints = Config.getvalue("maximum_points");
             nterm =  Config.getvalue("n-term");
-            calculate();
         } catch (Exception e) {
             System.out.println("that did not work, reverting to console method");
             console();
@@ -44,7 +63,6 @@ public class Main {
             totalpoints = scanner.nextInt();
             System.out.println("What is the n-term for this test?");
             nterm = scanner.nextDouble();
-            calculate();
     }
 
     public static void calculate() {
@@ -52,6 +70,12 @@ public class Main {
         int scale = (int) Math.pow(10, 1);
         double roundedresult = (double) round(result * scale) / scale;
         System.out.println("result: " + roundedresult);
-        System.exit(0);
+    }
+
+
+
+    private static void end() {
+        System.out.println("thanks for using the calculator");
+        System.exit(-1);
     }
 }
